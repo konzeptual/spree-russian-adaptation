@@ -90,6 +90,11 @@ class RussianAdaptationExtension < Spree::Extension
       end      
     end
 
+    OrderMailer.class_eval do
+      helper HookHelper
+    end
+      
+
     # admin.tabs.add "Russian Adaptation", "/admin/russian_adaptation", :after => "Layouts", :visibility => [:all]
   end
 end
