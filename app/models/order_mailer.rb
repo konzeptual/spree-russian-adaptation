@@ -1,7 +1,7 @@
 # encoding: utf-8
 class OrderMailer < ActionMailer::QueueMailer
   helper "spree/base"
-  
+  helper 'hook'
   def confirm(order, resend = false)
     @subject    = (resend ? "[RESEND] " : "") 
     @subject    += Spree::Config[:site_name] + ' :: Уведомление о заказе #' + order.number
