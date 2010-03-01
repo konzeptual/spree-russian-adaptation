@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-font_directory = "#{SPREE_ROOT}/public/fonts"
+font_directory = "#{SPREE_ROOT}/public/images/fonts"
 pdf.font_families.update(
                          "Arial" => { :bold => "#{font_directory}/arialbd.ttf",
                            :italic      => "#{font_directory}/ariali.ttf",
