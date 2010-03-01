@@ -11,6 +11,7 @@ class RussianAdaptationExtension < Spree::Extension
 
   def self.require_gems(config)
     config.gem 'russian', :lib => 'russian', :source => 'http://gemcutter.org'
+    config.gem 'prawn'
   end
 
   def activate
@@ -89,6 +90,13 @@ class RussianAdaptationExtension < Spree::Extension
       end      
     end
 
+    Admin::OrdersController.class_eval do
+      show.success.wants.pdf { render :layout => false} #, :template => 'admin/orders/show.pdf.prawn'
+    end
+
+    AppConfiguration.class_eval do
+      preference :print_invoice_logo_path, :string, :default => '/images/admin/bg/spree_50.png'
+    end
     # admin.tabs.add "Russian Adaptation", "/admin/russian_adaptation", :after => "Layouts", :visibility => [:all]
   end
 end

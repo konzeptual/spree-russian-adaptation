@@ -1,3 +1,6 @@
+invoice:
+  company_name: "Интернет-магазин Пупкин и Ко"
+  logo: "images/admin/bg/spree_50.png"
 payment:
   sberbank:
     bik: "000000000"
