@@ -1,5 +1,5 @@
 invoice:
-  company_name: "Интернет-магазин Пупкин и Ко"
+  company_name: "Интернет-магазин Фирма"
   logo: "images/admin/bg/spree_50.png"
 payment:
   sberbank:

@@ -6,8 +6,6 @@ end
 
 Time.zone = RUSSIAN_CONFIG['country']['timezone']
 I18n.default_locale = :'ru-RU'
-locale = File.join(File.dirname(__FILE__), '..', 'locales', RUSSIAN_CONFIG['country']['id'], 'ru-RU.yml')
-I18n.load_path << locale if File.exists?(locale) and !I18n.load_path.include?(locale)
 
 if Spree::Config.instance
   Spree::Config.set(:default_locale => :'ru-RU')
@@ -17,3 +15,8 @@ if Spree::Config.instance
 end
 
 ActiveMerchant::Billing::Base.mode = (RAILS_ENV == 'production') ? :live : :test
+
+
+require 'action_controller/mime_type'
+require 'prawn'
+Mime::Type.register 'application/pdf', :pdf
