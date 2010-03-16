@@ -59,14 +59,14 @@ class RussianAdaptationExtension < Spree::Extension
       end
     end
     
-    Checkout.state_machines[:state] =
-        StateMachine::Machine.new(Checkout, :initial => 'address') do
-          after_transition :to => 'complete', :do => :complete_order   
-          event :next do
-            transition :to => 'delivery', :from  => 'address'
-            transition :to => 'complete', :from => 'delivery'
-          end
-        end
+    # Checkout.state_machines[:state] =
+    #     StateMachine::Machine.new(Checkout, :initial => 'address') do
+    #       after_transition :to => 'complete', :do => :complete_order   
+    #       event :next do
+    #         transition :to => 'delivery', :from  => 'address'
+    #         transition :to => 'complete', :from => 'delivery'
+    #       end
+    #     end
 
     ActionView::Helpers::NumberHelper.module_eval do
       def number_to_currency(number, options = {})
