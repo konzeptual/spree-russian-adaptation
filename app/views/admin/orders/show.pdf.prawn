@@ -7,7 +7,7 @@ pdf.font_families.update(
                            :normal      => "#{font_directory}/arial.ttf" })
 pdf.font "Arial"
 
-ship_address = @order.ship_address
+address = @order.ship_address
 invoice_config = RUSSIAN_CONFIG['invoice'].symbolize_keys
 
 ###################################
@@ -32,7 +32,12 @@ pdf.move_down 20
 # pdf.move_down 5
 pdf.text "От кого: #{invoice_config[:company_name]}"
 pdf.move_down 5
-pdf.text "Получатель: #{ship_address.firstname} #{ship_address.lastname}"
+pdf.text "Получатель: #{address.firstname} #{address.lastname}"
+pdf.text address.phone
+(", #{address.alternative_phone}" unless address.alternative_phone.blank?).to_s
+pdf.text address.address1 +
+  (", #{address.address2}" unless address.address2.blank?).to_s +
+  ", #{address.city}, #{address.state}, #{address.zipcode}, #{address.country.name}"
 pdf.move_down 15
 
 ###################################
