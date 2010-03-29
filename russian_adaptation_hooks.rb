@@ -9,11 +9,11 @@ class RussianAdaptationHooks < Spree::ThemeSupport::HookListener
   end
 
   insert_after :admin_order_show_buttons do
-    %( <%= button_link_to(I18n::t("invoice"), formatted_admin_order_url(@order, :pdf)) %>)
+    %( <%= button_link_to(I18n::t("invoice"), admin_order_url(@order, :format => :pdf)) %>)
   end
 
   insert_after :admin_order_edit_buttons do
-    %( <%= button_link_to(I18n::t("invoice"), formatted_admin_order_url(@order, :pdf)) %>)
+    %( <%= button_link_to(I18n::t("invoice"), admin_order_url(@order, :format => :pdf)) %>)
   end
 
 end
