@@ -13,6 +13,7 @@ invoice_config = RUSSIAN_CONFIG['invoice'].symbolize_keys
 ###################################
 # Шапка
 ###################################
+pdf.move_down 20
 pdf.image "#{SPREE_ROOT}/public/#{invoice_config[:logo]}", :at => [10,720], :scale => 0.65
 pdf.move_down 20
 pdf.text "#{I18n::t('invoice')} №#{@order.number}",
