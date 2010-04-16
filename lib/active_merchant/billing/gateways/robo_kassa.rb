@@ -247,7 +247,7 @@ module ActiveMerchant #:nodoc:
         url = test? ? TEST_PAYMENT_FORM_URL : LIVE_PAYMENT_FORM_URL
         submit = "<input type=submit value='#{@options[:value]}'>"
         params = [
-                  "<input type=hidden name=MrchLogin value='#{@options[:login]}'",
+                  "<input type=hidden name=MrchLogin value='#{@options[:login]}'>",
                   "<input type=hidden name=OutSum value='#{@options[:summa]}'>",
                   "<input type=hidden name=InvId value='#{@options[:invoice]}'>",
                   "<input type=hidden name=Desc value='#{@options[:description]}'>",
