@@ -82,7 +82,8 @@ module ActiveMerchant #:nodoc:
       # value - надпись на кнопки (Оплатить)
       def method_missing(method_id, options ={ }, shp_fields ={ })
         if (method_id == :payment_button) ||
-            ( method_id == :payment_kassa)
+            ( method_id == :payment_kassa) ||
+            ( method_id == :payment_requesturl)
           @options.merge!(options)
           @custom_fields = shp_fields
           @options[:signature] = Digest::MD5.hexdigest([@options[:login], @options[:summa],
@@ -242,7 +243,17 @@ module ActiveMerchant #:nodoc:
         src = [url, params].join('?')
         return  %{<script language=JavaScript src='#{src}'> </script>}        
       end
-      
+
+      def requesturl
+        url = test? ? TEST_PAYMENT_FORM_URL : LIVE_PAYMENT_FORM_URL
+        params = ["MrchLogin=#{@options[:login]}", "OutSum=#{@options[:summa]}",
+                  "InvId=#{@options[:invoice]}", "IncCurrLabel=#{@options[:payment_currentcy]}",
+                  "Desc=#{@options[:order_description]}", "SignatureValue=#{@options[:signature]}",
+                  "Culture=#{@options[:language]}",
+                  shp_fields_to_param ].flatten.join('&')
+        [url, params].join('?')
+      end
+
       def button
         url = test? ? TEST_PAYMENT_FORM_URL : LIVE_PAYMENT_FORM_URL
         submit = "<input type=submit value='#{@options[:value]}'>"

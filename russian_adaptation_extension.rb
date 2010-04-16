@@ -41,6 +41,21 @@ class RussianAdaptationExtension < Spree::Extension
       end     
     end
 
+    CheckoutsController.class_eval do
+      
+      def complete_checkout
+        complete_order
+        order_params = {:checkout_complete => true}
+        session[:order_id] = nil
+        flash[:commerce_tracking] = I18n.t("notice_messages.track_me_in_GA")
+        redirect_url = (@checkout.payment && @checkout.payment.payment_method.type == 'Gateway::RoboKassa') ? 
+          @order.checkout.payment.payment_method.robokassa_payment_url({:invoice => @order.number[1..-1], :summa =>  @order.total, :value => "Оплатить"},{:shpa => "omed"} ) :
+          order_url(@order, {:checkout_complete => true, :order_token => @order.token})
+        redirect_to redirect_url
+      end
+
+    end
+
     Gateway.class_eval do
       def self.current
         self.first :conditions => ["environment = ? AND active = ?", RAILS_ENV, true]
@@ -59,14 +74,17 @@ class RussianAdaptationExtension < Spree::Extension
       end
     end
     
-    # Checkout.state_machines[:state] =
-    #     StateMachine::Machine.new(Checkout, :initial => 'address') do
-    #       after_transition :to => 'complete', :do => :complete_order   
-    #       event :next do
-    #         transition :to => 'delivery', :from  => 'address'
-    #         transition :to => 'complete', :from => 'delivery'
-    #       end
-    #     end
+    # state_machine :initial => 'address' do
+    #   after_transition :to => 'complete', :do => :complete_order
+    #   before_transition :to => 'complete', :do => :process_payment
+    #   event :next do
+    #     transition :to => 'delivery', :from  => 'address'
+    #     transition :to => 'payment', :from => 'delivery'
+    #     transition :to => 'confirm', :from => 'payment', :if => Proc.new { Gateway.current and Gateway.current.payment_profiles_supported? }
+    #     transition :to => 'complete', :from => 'confirm'
+    #     transition :to => 'complete', :from => 'payment'
+    #   end
+    # end
 
     ActionView::Helpers::NumberHelper.module_eval do
       def number_to_currency(number, options = {})

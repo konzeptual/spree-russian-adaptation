@@ -11,6 +11,10 @@ class Gateway::RoboKassa < Gateway
     provider.payment_button(params1, params2)
   end
 
+  def robokassa_payment_url(params1, params2)
+    provider.payment_requesturl(params1, params2)
+  end
+
   def payment_kassa(params1, params2)
     provider.payment_kassa(params1, params2)
   end
