@@ -1,4 +1,5 @@
-class PaymentsController < Spree::BaseController
+# -*- coding: utf-8 -*-
+class RoboKassaController < Spree::BaseController
   before_filter :load_robokassa
   
   def show
@@ -48,7 +49,7 @@ class PaymentsController < Spree::BaseController
   end
   
   def load_robokassa
-    @robo_kassa = Gateway.current.provider
+    @robo_kassa = Gateway.current.provider 
   end
 
 end
