@@ -1,4 +1,4 @@
-<% if order.checkout.payment and order.checkout.payment.payment_method.method_type == 'robo_kassa' and (@order.payment_total < @order.total)%>
+<% if (order.payment_total < order.total) and order.checkout.payment and order.checkout.payment.payment_method.method_type == 'robo_kassa'%>
   <div>
     <div>Счет №<%=order.number%> </div>
     <div>Сумма: <%=order.total%></div>

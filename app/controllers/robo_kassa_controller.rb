@@ -22,9 +22,6 @@ class RoboKassaController < Spree::BaseController
     elsif @robo_kassa.success?(params)
       payment = Payment.new(:payable => order, :amount => params[:OutSum])
       payment.save
-      # payment = Payment.new(:amount => params[:OutSum])
-      # payment.payable_id = order.checkout
-      # payment.finalize!
       flash[:notice] = 'Платёж принят, спасибо!'
     else
       flash[:error] = 'Платёж не прошёл проверку подписи.'
