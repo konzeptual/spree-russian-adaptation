@@ -18,9 +18,10 @@ class RoboKassaController < Spree::BaseController
 
   def success
     if  not load_order_by_number(params[:InvId].to_s) 
-      flash[:error] = 'Заказ R#{params[:InvId].to_s} не найден.'
+      flash[:error] = 'Заказ #{params[:InvId].to_s} не найден.'
     elsif @robo_kassa.success?(params)
-      payment = Payment.new(:payable => @order, :amount => params[:OutSum])
+      payment = Payment.new(:amount => params[:OutSum])
+      payment.payable_id = @order
       payment.save
       flash[:notice] = 'Платёж принят, спасибо!'
     else
@@ -42,6 +43,9 @@ class RoboKassaController < Spree::BaseController
   end
   
   def load_order_by_number(number)
+    # TODO Сделать корректный поиск по номеру заказу. Особенно в
+    # случае, если первый ноль упущен робокассой.
+
     # Мы не можем просто искать по номеру, тк
     # если номер заказа типа R0xxxxx
     # то в робокассой возвращается только xxxx без первого нуля
