@@ -1,0 +1,6 @@
+Статус заказа: <strong><%= t(order.state).titleize %></strong>
+<br /><br />
+
+<% if (order.payment_total < order.total) and order.checkout.payment and (order.checkout.payment.payment_method.method_type == 'robo_kassa') %>
+<%= render(:partial => "pay_with_robokassa", :locals => {:order => order} ) %>  
+<% end -%>

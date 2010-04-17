@@ -1,10 +1,9 @@
-<% if (order.payment_total < order.total) and order.checkout.payment and (order.checkout.payment.payment_method.method_type == 'robo_kassa') %>
+<div>
+  <div>Счет №<%=order.number%> </div>
+  <div>Сумма: <%=order.total%></div>
   <div>
-    <div>Счет №<%=order.number%> </div>
-    <div>Сумма: <%=order.total%></div>
-    <div>
-      <%= order.checkout.payment.payment_method.payment_button({:invoice => order.number[1..-1], :summa =>  order.total, :value => "Оплатить"},  {:shpa => "omed"}) %> 
-    </div>
+    <%= order.checkout.payment.payment_method.payment_button({:invoice => order.number[1..-1], :summa =>  order.total, :value => "Оплатить"},  {:shpa => "omed"}) %> 
+    При нажатии кнопки вы будете перенаправлены на сайт robokassa.ru, где и сможете оплатить заказ.
   </div>
-<% end -%>
+</div>
 
