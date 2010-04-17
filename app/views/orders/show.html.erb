@@ -10,6 +10,7 @@
   <br/><br/>
 
   <%= render :partial => 'shared/order_details', :locals => {:order => @order} -%>
+  <%= render(:partial => "pay_with_robokassa", :locals => {:order => @order} ) %>  
 
   <br/>
   <% if (@order.shipping_method && @order.shipping_method.name =~ /предопл/) %>

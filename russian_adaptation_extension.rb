@@ -43,16 +43,16 @@ class RussianAdaptationExtension < Spree::Extension
 
     CheckoutsController.class_eval do
       
-      def complete_checkout
-        complete_order
-        order_params = {:checkout_complete => true}
-        session[:order_id] = nil
-        flash[:commerce_tracking] = I18n.t("notice_messages.track_me_in_GA")
-        redirect_url = (@checkout.payment && @checkout.payment.payment_method.type == 'Gateway::RoboKassa') ? 
-          @order.checkout.payment.payment_method.robokassa_payment_url({:invoice => @order.number[1..-1], :summa =>  @order.total, :value => "Оплатить"},{:shpa => "omed"} ) :
-          order_url(@order, {:checkout_complete => true, :order_token => @order.token})
-        redirect_to redirect_url
-      end
+      # def complete_checkout
+      #   complete_order
+      #   order_params = {:checkout_complete => true}
+      #   session[:order_id] = nil
+      #   flash[:commerce_tracking] = I18n.t("notice_messages.track_me_in_GA")
+      #   redirect_url = (@checkout.payment && @checkout.payment.payment_method.type == 'Gateway::RoboKassa') ? 
+      #     @order.checkout.payment.payment_method.robokassa_payment_url({:invoice => @order.number[1..-1], :summa =>  @order.total, :value => "Оплатить"},{:shpa => "omed"} ) :
+      #     order_url(@order, {:checkout_complete => true, :order_token => @order.token})
+      #   redirect_to redirect_url
+      # end
 
     end
 
