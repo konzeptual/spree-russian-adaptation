@@ -17,8 +17,9 @@ class RoboKassaController < Spree::BaseController
   end
 
   def success
-    if @robo_kassa.success?(params)
-      load_order_by_number('R' + params[:InvId].to_s)
+    if  load_order_by_number('R' + params[:InvId].to_s) 
+      flash[:error] = 'Заказ R#{params[:InvId].to_s} не найден.'
+    elsif  load_order_by_number('R' + params[:InvId].to_s) and @robo_kassa.success?(params)
       payment = Payment.new(:payable => @order, :amount => params[:OutSum])
       payment.save
       flash[:notice] = 'Платёж принят, спасибо!'
