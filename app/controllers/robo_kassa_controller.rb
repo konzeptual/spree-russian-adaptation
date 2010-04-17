@@ -8,7 +8,7 @@ class RoboKassaController < Spree::BaseController
 
   def result
     if @robo_kassa.result?(params)
-      load_order_by_number('R' + params[:InvId])
+      load_order_by_number(params[:InvId])
       render :text => "OK#{params[:InvId]}", :status => :ok 
     else
       
@@ -17,7 +17,7 @@ class RoboKassaController < Spree::BaseController
   end
 
   def success
-    if  not load_order_by_number('R' + params[:InvId].to_s) 
+    if  not load_order_by_number(params[:InvId].to_s) 
       flash[:error] = 'Заказ R#{params[:InvId].to_s} не найден.'
     elsif @robo_kassa.success?(params)
       payment = Payment.new(:payable => @order, :amount => params[:OutSum])
@@ -30,7 +30,7 @@ class RoboKassaController < Spree::BaseController
   end
   
   def fail
-    load_order_by_number('R' + params[:InvId])
+    load_order_by_number(params[:InvId])
     flash[:error] = 'Платёж не завершен или отменён.'
     redirect_to @order ? order_url(@order.number) : root_url
   end
@@ -42,7 +42,12 @@ class RoboKassaController < Spree::BaseController
   end
   
   def load_order_by_number(number)
-    @order = Order.find_by_number(number)
+    # Мы не можем просто искать по номеру, тк
+    # если номер заказа типа R0xxxxx
+    # то в робокассой возвращается только xxxx без первого нуля
+    # @order = Order.find_by_number(number)
+    @order = Order.number_like(number)
+
     # При редиректе мне выдавалась ошибка:
     # Please note that you may only call render at most once per action. Also note that neither redirect nor render terminate
     # execution of the action, so if you want to exit an action after redirecting, you need
