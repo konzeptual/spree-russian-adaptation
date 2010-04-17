@@ -20,10 +20,11 @@ class RoboKassaController < Spree::BaseController
     if not order = Order.number_like(params[:InvId]).first 
       flash[:error] = "Заказ #{params[:InvId].to_s} не найден."
     elsif @robo_kassa.success?(params)
-      payment = Payment.new(:amount => params[:OutSum])
-      payment.payable_id = order.checkout
-      payment.finalize!
+      payment = Payment.new(:payable => order, :amount => params[:OutSum])
       payment.save
+      # payment = Payment.new(:amount => params[:OutSum])
+      # payment.payable_id = order.checkout
+      # payment.finalize!
       flash[:notice] = 'Платёж принят, спасибо!'
     else
       flash[:error] = 'Платёж не прошёл проверку подписи.'
