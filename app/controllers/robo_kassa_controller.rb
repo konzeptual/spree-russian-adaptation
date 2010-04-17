@@ -7,17 +7,16 @@ class RoboKassaController < Spree::BaseController
   end
 
   def result
-    if @robo_kassa.result?(params)
-      load_order_by_number(params[:InvId])
+    load_order_by_number(params[:InvId])
+    if @order and @robo_kassa.result?(params)
       render :text => "OK#{params[:InvId]}", :status => :ok 
     else
-      
       render :text => "Signature is invalid", :status => :ok
     end 
   end
 
   def success
-    if not order = Order.number_like(params[:InvId]).first 
+    if not order = load_order_by_number(params[:InvId])
       flash[:error] = "Заказ #{params[:InvId].to_s} не найден."
     elsif @robo_kassa.success?(params)
       payment = Payment.new(:payable => order, :amount => params[:OutSum])
