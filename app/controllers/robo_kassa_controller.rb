@@ -11,6 +11,7 @@ class RoboKassaController < Spree::BaseController
       load_order_by_number('R' + params[:InvId])
       render :text => "OK#{params[:InvId]}", :status => :ok 
     else
+      
       render :text => "Signature is invalid", :status => :ok
     end 
   end
@@ -18,8 +19,7 @@ class RoboKassaController < Spree::BaseController
   def success
     if @robo_kassa.success?(params)
       load_order_by_number('R' + params[:InvId].to_s)
-      payment = Payment.new(:amount => params[:OutSum])
-      payment.order = @order
+      payment = Payment.new(:payable => @order, :amount => params[:OutSum])
       payment.save
       flash[:notice] = 'Платёж принят, спасибо!'
     else
