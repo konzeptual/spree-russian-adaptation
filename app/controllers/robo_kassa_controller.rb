@@ -17,17 +17,18 @@ class RoboKassaController < Spree::BaseController
   end
 
   def success
-    if  not load_order_by_number(params[:InvId].to_s) 
-      flash[:error] = 'Заказ #{params[:InvId].to_s} не найден.'
+    if not order = Order.number_like(params[:InvId]).first 
+      flash[:error] = "Заказ #{params[:InvId].to_s} не найден."
     elsif @robo_kassa.success?(params)
       payment = Payment.new(:amount => params[:OutSum])
-      payment.payable_id = @order
+      payment.payable_id = order
+      payment.finalize!
       payment.save
       flash[:notice] = 'Платёж принят, спасибо!'
     else
       flash[:error] = 'Платёж не прошёл проверку подписи.'
     end
-    redirect_to @order ? order_url(@order.number) : root_url
+    redirect_to order ? order_url(order.number) : root_url
   end
   
   def fail
@@ -50,7 +51,7 @@ class RoboKassaController < Spree::BaseController
     # если номер заказа типа R0xxxxx
     # то в робокассой возвращается только xxxx без первого нуля
     # @order = Order.find_by_number(number)
-    @order = Order.number_like(number)
+    @order = Order.number_like(number).first
 
     # При редиректе мне выдавалась ошибка:
     # Please note that you may only call render at most once per action. Also note that neither redirect nor render terminate
