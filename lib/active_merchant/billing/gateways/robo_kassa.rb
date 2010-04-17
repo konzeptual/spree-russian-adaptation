@@ -38,7 +38,7 @@ module ActiveMerchant #:nodoc:
         '100' => 'операция завершена успешно'
       }
       
-  EXCHANGE_RATE_RET_CODE = { 
+      EXCHANGE_RATE_RET_CODE = { 
         '-100' => "неверно сформирован запрос (не все требуемые параметры заданы, либо запрос не разобран вовсе)",
         '0' => "нет ошибки.",
         '1' => "sIncCurrLabel задан неверно",
@@ -82,12 +82,13 @@ module ActiveMerchant #:nodoc:
       # value - надпись на кнопки (Оплатить)
       def method_missing(method_id, options ={ }, shp_fields ={ })
         if (method_id == :payment_button) ||
-            ( method_id == :payment_kassa)
+            ( method_id == :payment_kassa) ||
+            ( method_id == :payment_requesturl)
           @options.merge!(options)
           @custom_fields = shp_fields
           @options[:signature] = Digest::MD5.hexdigest([@options[:login], @options[:summa],
                                                         @options[:invoice],@options[:password1],
-                                             shp_fields_to_param ].flatten.join(':')) 
+                                                        shp_fields_to_param ].flatten.join(':')) 
           @method_id = method_id.to_s.split("_").last.to_sym
           if valid_summa? && valid_invoice?
             send(@method_id)
@@ -98,26 +99,36 @@ module ActiveMerchant #:nodoc:
           super
         end
       end
-       # При проверке указываеться пароль2 на проверку результат
+      # При проверке указываеться пароль2 на проверку результат
       def result(params)
         out_sum,invoice_id = params[:OutSum], params[:InvId]
         in_signature = params[:SignatureValue]
-        params.each {|k,v| @custom_fields[k.to_sym] = v if k =~ /^shp/}
-        signature = Digest::MD5.hexdigest([ out_sum,invoice_id, @options[:password2], 
-                                            shp_fields_to_param].flatten.join(':')) 
-        in_signature.upcase == signature.upcase ? true : false
+        if in_signature.blank? or out_sum.blank? or invoice_id.blank?
+          return false
+        else
+          params.each {|k,v| @custom_fields[k.to_sym] = v if k =~ /^shp/}
+          signature = Digest::MD5.hexdigest([ out_sum,invoice_id, @options[:password2], 
+                                              shp_fields_to_param].flatten.join(':')) 
+          
+          in_signature.upcase == signature.upcase ? true : false
+        end
       end
+
       
       alias :result? :result
-       # при проверки положительно завершения используеться пароль1
+      # при проверки положительно завершения используеться пароль1
       def success(params)
         out_sum,invoice_id = params[:OutSum], params[:InvId]
         in_signature = params[:SignatureValue]
+        if in_signature.blank? or out_sum.blank? or invoice_id.blank?
+          return false
+        else
         params.each {|k,v| @custom_fields[k.to_sym] = v if k =~ /^shp/}        
         signature = Digest::MD5.hexdigest([ out_sum,invoice_id, 
                                             @options[:password1],
                                             shp_fields_to_param ].flatten.join(':')) 
         in_signature.upcase == signature.upcase ? true : false
+        end
       end
       
       alias :success? :success
@@ -134,7 +145,7 @@ module ActiveMerchant #:nodoc:
         if invoice.is_a?(Integer) || invoice.is_a?(String)
           @invoice = invoice
         elsif invoice.is_a?(Hash) && invoice.has_key?(:InvId)
-           @invoice = invoice[:InvId]
+          @invoice = invoice[:InvId]
         else 
           false
         end
@@ -156,7 +167,7 @@ module ActiveMerchant #:nodoc:
         status = { }
         xml = REXML::Document.new(result)
 
-       elements =  REXML::XPath.first(xml, "robox.opstate.resp").root.elements
+        elements =  REXML::XPath.first(xml, "robox.opstate.resp").root.elements
         status[:retval] = STATE_OPERATION_RET_CODE[elements[1].text]
         status[:date] = elements[2].text
         status[:out_curr] =elements[3].text
@@ -219,7 +230,7 @@ module ActiveMerchant #:nodoc:
         return currency
       end
       
-     private
+      private
       
       def valid_invoice
         !@options[:invoice].nil? && !@options[:invoice].to_s.empty?
@@ -242,12 +253,22 @@ module ActiveMerchant #:nodoc:
         src = [url, params].join('?')
         return  %{<script language=JavaScript src='#{src}'> </script>}        
       end
-      
+
+      def requesturl
+        url = test? ? TEST_PAYMENT_FORM_URL : LIVE_PAYMENT_FORM_URL
+        params = ["MrchLogin=#{@options[:login]}", "OutSum=#{@options[:summa]}",
+                  "InvId=#{@options[:invoice]}", "IncCurrLabel=#{@options[:payment_currentcy]}",
+                  "Desc=#{@options[:order_description]}", "SignatureValue=#{@options[:signature]}",
+                  "Culture=#{@options[:language]}",
+                  shp_fields_to_param ].flatten.join('&')
+        [url, params].join('?')
+      end
+
       def button
         url = test? ? TEST_PAYMENT_FORM_URL : LIVE_PAYMENT_FORM_URL
         submit = "<input type=submit value='#{@options[:value]}'>"
         params = [
-                  "<input type=hidden name=MrchLogin value='#{@options[:login]}'",
+                  "<input type=hidden name=MrchLogin value='#{@options[:login]}'>",
                   "<input type=hidden name=OutSum value='#{@options[:summa]}'>",
                   "<input type=hidden name=InvId value='#{@options[:invoice]}'>",
                   "<input type=hidden name=Desc value='#{@options[:description]}'>",
