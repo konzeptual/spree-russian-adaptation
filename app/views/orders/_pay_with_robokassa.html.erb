@@ -1,9 +1,10 @@
 <div>
+  <h3>Вам осталось только оплатить ваш заказ:</h3>         
   <div>Счет №<%=order.number%> </div>
   <div>Сумма: <%=order.total%></div>
   <div>
     <%= order.checkout.payment.payment_method.payment_button({:invoice => order.number[1..-1], :summa =>  order.total, :value => "Оплатить"},  {:shpa => "omed"}) %> 
-    При нажатии кнопки вы будете перенаправлены на сайт robokassa.ru, где и сможете оплатить заказ.
+    При нажатии кнопки вы будете перенаправлены на сайт robokassa.ru.
   </div>
 </div>
 
