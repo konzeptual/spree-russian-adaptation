@@ -21,7 +21,7 @@ class RoboKassaController < Spree::BaseController
       flash[:error] = "Заказ #{params[:InvId].to_s} не найден."
     elsif @robo_kassa.success?(params)
       payment = Payment.new(:amount => params[:OutSum])
-      payment.payable_id = order
+      payment.payable_id = order.checkout
       payment.finalize!
       payment.save
       flash[:notice] = 'Платёж принят, спасибо!'
