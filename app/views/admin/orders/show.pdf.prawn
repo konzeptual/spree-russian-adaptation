@@ -39,6 +39,7 @@ pdf.text address.phone
 pdf.text address.address1 +
   (", #{address.address2}" unless address.address2.blank?).to_s +
   ", #{address.city}, #{address.state}, #{address.zipcode}, #{address.country.name}"
+pdf.text I18n::t(:shipping_instructions) + ': ' + @order.special_instructions unless @order.special_instructions.blank?
 pdf.move_down 15
 
 ###################################
@@ -84,8 +85,6 @@ pdf.text "#{I18n::t('total')}: #{number_to_currency(@order.total).gsub('&nbsp;',
 :size => 13,
 :style => :bold,
 :align => :right
-
-
 
 
 
