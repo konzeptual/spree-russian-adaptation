@@ -22,6 +22,9 @@ class RussianAdaptationExtension < Spree::Extension
     require "active_merchant/billing/gateways/robo_kassa"
     Gateway::RoboKassa.register
     
+    [ Calculator::RussianPost ].each(&:register) 
+    
+
     # replace .to_url method provided by stringx gem by .parameterize provided by russian gem
     String.class_eval do
       def to_url
