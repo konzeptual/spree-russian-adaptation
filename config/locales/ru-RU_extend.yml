@@ -20,7 +20,7 @@ ru-RU:
   show_active: "Показать действующие"
   invoice: "Накладная"
 
-  order_delivery_status: "Где сейчас находится мой заказ?"
+  order_delivery_status: "Отследить где сейчас находится мой заказ."
   order_delivery_status_according_to_russian_post: 'Отследить местоположение вашего заказа согласно данным Почты России'
   order_status: 'Подробности вашего заказа'
   all_your_orders: 'Все ваши заказы'
