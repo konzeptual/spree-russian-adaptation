@@ -30,7 +30,7 @@ class RussianAdaptationExtension < Spree::Extension
       def to_url
         self.parameterize
       end
-   	end
+    end
 
 
     OrdersController.class_eval do
@@ -67,11 +67,11 @@ class RussianAdaptationExtension < Spree::Extension
 
     Checkout.class_eval do
       validation_group :address, :fields=> [
-      "ship_address.firstname", "ship_address.lastname", "ship_address.phone", 
-      "ship_address.zipcode", "ship_address.state", "ship_address.lastname", 
-      "ship_address.address1", "ship_address.city", "ship_address.statename", 
-      "ship_address.zipcode", "ship_address.secondname"]
-  
+                                            "ship_address.firstname", "ship_address.lastname", "ship_address.phone", 
+                                            "ship_address.zipcode", "ship_address.state", "ship_address.lastname", 
+                                            "ship_address.address1", "ship_address.city", "ship_address.statename", 
+                                            "ship_address.zipcode", "ship_address.secondname"]
+      
       def bill_address
         ship_address || Address.default
       end
@@ -113,6 +113,20 @@ class RussianAdaptationExtension < Spree::Extension
 
     Admin::OrdersController.class_eval do
       show.success.wants.pdf { render :layout => false, :template => 'admin/orders/show.pdf.prawn'}
+    end
+
+    OrdersHelper.module_eval do
+      def russian_post_tracking_url bar_code
+        "http://info.russianpost.ru/servlet/post_item?action=search&searchType=barCode&barCode=#{bar_code}"
+      end 
+
+      def russian_post_delivery_status_url bar_code
+        if bar_code
+          link_to t(:order_delivery_status), russian_post_tracking_url(bar_code), {:target => :blank, :title => t(:order_delivery_status_according_to_russian_post)}
+        else
+          ''
+        end
+      end
     end
 
     AppConfiguration.class_eval do
