@@ -1,5 +1,7 @@
-Статус заказа: <strong><%= t(order.state).titleize %></strong>
-<br /><br />
+Статус заказа: <strong><%= t(order.state).titleize %></strong><br />
+<%= link_to "Где сейчас находится мой заказ?", "http://info.russianpost.ru/servlet/post_item?action=search&searchType=barCode&barCode=#{order.shipment.tracking}",
+    {:target => :blank, :title => 'Отследить местоположение вашего заказа согласно данным Почты России'} if order.shipment.tracking %>
+<br />
 
 <% if (order.payment_total < order.total) and order.checkout.payment and (order.checkout.payment.payment_method.method_type == 'robo_kassa') %>
 <%= render(:partial => "pay_with_robokassa", :locals => {:order => order} ) %>  
