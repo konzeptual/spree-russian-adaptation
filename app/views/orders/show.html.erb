@@ -11,6 +11,7 @@
 
   <%= render(:partial => "order_status", :locals => {:order => @order} ) %>
   <br />
+  <h2>Детали заказа</h2>
   <%= render :partial => 'shared/order_details', :locals => {:order => @order} -%>
 
   <br/>

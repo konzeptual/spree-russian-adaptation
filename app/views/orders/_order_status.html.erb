@@ -1,8 +1,11 @@
+<h2>Статус заказа</h2>
 Статус заказа: <strong><%= t(order.state).titleize %></strong><br />
 <%= russian_post_delivery_status_url order.shipment.tracking %>
 <br />
 
 <% if (order.payment_total < order.total) and order.checkout.payment %>
+     <h2>Оплата</h2>
+     Метод оплаты: <strong><%=  order.checkout.payment.payment_method.name %></strong> <br />
      <p><%= order.checkout.payment.payment_method.description %></p>
      <% if(order.checkout.payment.payment_method.method_type == 'robo_kassa') %>
         <%= render(:partial => "pay_with_robokassa", :locals => {:order => order} ) %>  
