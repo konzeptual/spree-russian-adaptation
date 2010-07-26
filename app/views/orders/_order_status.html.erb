@@ -1,6 +1,6 @@
 <h2>Статус заказа</h2>
 Статус заказа: <strong><%= t(order.state).titleize %></strong><br />
-<%= russian_post_delivery_status_url order.shipment.tracking %>
+<%= russian_post_delivery_status_url order.shipment.tracking if order.shipment %>
 <br />
 
 <% if (order.payment_total < order.total) and order.checkout.payment %>
