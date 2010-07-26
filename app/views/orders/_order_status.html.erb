@@ -2,6 +2,9 @@
 <%= russian_post_delivery_status_url order.shipment.tracking %>
 <br />
 
-<% if (order.payment_total < order.total) and order.checkout.payment and (order.checkout.payment.payment_method.method_type == 'robo_kassa') %>
-<%= render(:partial => "pay_with_robokassa", :locals => {:order => order} ) %>  
+<% if (order.payment_total < order.total) and order.checkout.payment %>
+     <p><%= order.checkout.payment.payment_method.description %></p>
+     <% if(order.checkout.payment.payment_method.method_type == 'robo_kassa') %>
+        <%= render(:partial => "pay_with_robokassa", :locals => {:order => order} ) %>  
+     <% end -%>
 <% end -%>
