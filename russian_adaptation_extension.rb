@@ -59,11 +59,11 @@ class RussianAdaptationExtension < Spree::Extension
 
     end
 
-    Gateway.class_eval do
-      def self.current
-        self.first :conditions => ["environment = ? AND active = ?", RAILS_ENV, true]
-      end
-    end
+    # Gateway.class_eval do
+      # def self.current
+      #   self.first :conditions => ["environment = ? AND active = ?", RAILS_ENV, true]
+      # end
+    # end
 
     Checkout.class_eval do
       validation_group :address, :fields=> [
