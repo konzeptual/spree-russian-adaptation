@@ -64,7 +64,7 @@ end
                    ]
   i += 1
 end 
-
+order_items[i] = [I18n::t(:subtotal), '', '', number_to_currency(@order.item_total).gsub('&nbsp;', ' ')]
 pdf.table order_items,
 :headers  => [I18n::t('item_description'), I18n::t('price'), I18n::t('qty'), I18n::t('total')],
 :position           => :center,
