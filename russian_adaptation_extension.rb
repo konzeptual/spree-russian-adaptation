@@ -92,7 +92,7 @@ class RussianAdaptationExtension < Spree::Extension
     ActionView::Helpers::NumberHelper.module_eval do
       def number_to_currency(number, options = {})
         rub = number.to_i
-        kop = ((number - rub)*100).round.to_i
+        kop = ((number.to_f - rub)*100).round.to_i
         if (kop > 0)
           "#{rub}&nbsp;#{RUSSIAN_CONFIG['country']['currency']}&nbsp;#{'%.2d' % kop}&nbsp;коп.".mb_chars
         else
