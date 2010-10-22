@@ -60,9 +60,9 @@ class RussianAdaptationExtension < Spree::Extension
     end
 
     # Gateway.class_eval do
-      # def self.current
-      #   self.first :conditions => ["environment = ? AND active = ?", RAILS_ENV, true]
-      # end
+    # def self.current
+    #   self.first :conditions => ["environment = ? AND active = ?", RAILS_ENV, true]
+    # end
     # end
 
     Checkout.class_eval do
@@ -100,6 +100,10 @@ class RussianAdaptationExtension < Spree::Extension
         end
       end
     end
+
+    Spree::BaseController.class_eval do
+      helper RussianAdaptationHelper
+    end
     
     Admin::BaseHelper.module_eval do 
       def text_area(object_name, method, options = {})
@@ -113,20 +117,6 @@ class RussianAdaptationExtension < Spree::Extension
 
     Admin::OrdersController.class_eval do
       show.success.wants.pdf { render :layout => false, :template => 'admin/orders/show.pdf.prawn'}
-    end
-
-    OrdersHelper.module_eval do
-      def russian_post_tracking_url bar_code
-        "http://info.russianpost.ru/servlet/post_item?action=search&searchType=barCode&barCode=#{bar_code}"
-      end 
-
-      def russian_post_delivery_status_url bar_code
-        if bar_code
-          link_to t(:order_delivery_status), russian_post_tracking_url(bar_code), {:target => :blank, :title => t(:order_delivery_status_according_to_russian_post)}
-        else
-          ''
-        end
-      end
     end
 
     AppConfiguration.class_eval do
