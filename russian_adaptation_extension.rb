@@ -34,6 +34,8 @@ class RussianAdaptationExtension < Spree::Extension
 
 
     OrdersController.class_eval do
+      helper RussianAdaptationHelper
+
       def sberbank_billing
         if (@order.shipping_method.name =~ /предопл/ && can_access?)
           render :layout => false
