@@ -39,16 +39,17 @@ class Calculator::RussianPost < Calculator
 
   def compute(line_items=nil)
     order = line_items.last.order
-    total_weight = get_total_weight(line_items)
+    total_weight = Calculator::RussianPost.get_total_weight(line_items)
     delivery_zone = get_delivery_zone(order.checkout.ship_address.zipcode)
     delivery_zone.nil? ? 0 : get_delivery_price(delivery_zone, total_weight) + get_insurance_fee(order)
   end
 
-  private
-
-  def get_total_weight (line_items)
+  def self.get_total_weight (line_items)
     ((100 + VES_UPAKOVKI)/100)*line_items.map { |li| li.variant.weight.nil? ? VES_TOVARA_PO_UMOLCHANIYU : li.variant.weight}.sum
   end
+
+  private
+
 
   def get_delivery_zone (zipcode)
     INDEX_ZONE_HASH[zipcode.to_s[0,3]]
