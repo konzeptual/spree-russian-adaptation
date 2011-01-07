@@ -27,6 +27,7 @@ class RussianAdaptationExtension < Spree::Extension
 
     # replace .to_url method provided by stringx gem by .parameterize provided by russian gem
     String.class_eval do
+      alias_method :to_url_original, :to_url
       def to_url
         self.parameterize
       end
